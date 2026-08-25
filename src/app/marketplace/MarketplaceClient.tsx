@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -516,13 +516,42 @@ function Sidebar({
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 export default function MarketplaceClient() {
-  const [activeSection, setActiveSection] = useState<'templates' | 'portfolios' | 'how-it-works' | 'contact'>('templates')
+  const [activeSection, setActiveSectionState] = useState<'templates' | 'portfolios' | 'how-it-works' | 'contact'>('templates')
   const [activeType, setActiveType]       = useState('All')
   const [activeNiche, setActiveNiche]     = useState<string | null>(null)
   const [searchQuery, setSearchQuery]     = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [contactForm, setContactForm]     = useState({ name: '', phone: '', type: 'Ecommerce Website', message: '' })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Keep the URL hash in sync with the active section so any tab — e.g.
+  // Portfolios — can be linked to directly: /marketplace#portfolio
+  const SECTION_HASH: Record<typeof activeSection, string> = {
+    templates: 'templates', portfolios: 'portfolio', 'how-it-works': 'how-it-works', contact: 'contact',
+  }
+  const HASH_SECTION: Record<string, typeof activeSection> = {
+    templates: 'templates', portfolio: 'portfolios', portfolios: 'portfolios', 'how-it-works': 'how-it-works', contact: 'contact',
+  }
+
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase()
+      const section = HASH_SECTION[hash]
+      if (section) setActiveSectionState(section)
+    }
+    applyHash()
+    window.addEventListener('hashchange', applyHash)
+    return () => window.removeEventListener('hashchange', applyHash)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const setActiveSection = (section: typeof activeSection) => {
+    setActiveSectionState(section)
+    if (typeof window !== 'undefined') {
+      const newHash = `#${SECTION_HASH[section]}`
+      if (window.location.hash !== newHash) window.history.replaceState(null, '', newHash)
+    }
+  }
 
   const filtered = useMemo(() => {
     return TEMPLATES.filter((t) => {
