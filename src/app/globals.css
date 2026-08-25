@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-base:     #0a0a0a;
+  --color-bg-surface:  #111111;
+  --color-bg-elevated: #1a1a1a;
+  --color-accent:      #ffffff;
+  --color-border:      rgba(255,255,255,0.08);
+  --color-border-strong: rgba(255,255,255,0.12);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-base);
+  color: #ededed;
+  font-feature-settings: 'calt' 1, 'kern' 1;
+  font-optical-sizing: auto;
+}
+
+.font-display {
+  font-optical-sizing: auto;
+  font-feature-settings: 'calt' 1, 'kern' 1, 'cv05' 1, 'cv11' 1, 'ss03' 1;
+}
+
+.font-sans {
+  font-optical-sizing: auto;
+  font-feature-settings: 'calt' 1, 'kern' 1;
+}
+
+.font-mono {
+  font-feature-settings: 'tnum' 1, 'kern' 0;
+}
